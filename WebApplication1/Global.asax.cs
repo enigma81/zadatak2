@@ -14,7 +14,8 @@ namespace WebApplication1
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            Database.SetInitializer(new VehicleDBContextSeeder());
+            Database.SetInitializer(new VehicleDBContextSeederNotExists());
+            Database.SetInitializer(new VehicleDBContextSeederModelChanges());
         }
 
         protected void Session_Start(object sender, EventArgs e)
