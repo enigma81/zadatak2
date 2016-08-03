@@ -3,13 +3,13 @@ using System.Data.Entity;
 
 namespace Project.Service
 {
-    internal class SeedData
+    public class SeedData
     {
-        private List<VehicleMake> _Vehicles;
+        private List<VehicleMake> _vehicles;
 
         public SeedData()
         {
-            _Vehicles = new List<VehicleMake>()
+            _vehicles = new List<VehicleMake>()
             {
                 new VehicleMake()
                 {
@@ -20,12 +20,14 @@ namespace Project.Service
                         new VehicleModel()
                         {
                             Name = "Ford Focus",
-                            Abrv = "Ford"
+                            Abrv = "Ford",
+                            MakeId = 1                            
                         },
                         new VehicleModel()
                         {
                             Name = "Mustang GT",
-                            Abrv = "Ford"
+                            Abrv = "Ford",
+                            MakeId = 1
                         }
                     }
                 },
@@ -39,12 +41,14 @@ namespace Project.Service
                         new VehicleModel()
                         {
                             Name = "i8 Plug-in Hybrid",
-                            Abrv = "BMW"
+                            Abrv = "BMW",
+                            MakeId = 2
                         },
                         new VehicleModel()
                         {
                             Name = "X5",
-                            Abrv = "BMW"
+                            Abrv = "BMW",
+                            MakeId = 2
                         }
                     }
                 },
@@ -58,7 +62,8 @@ namespace Project.Service
                         new VehicleModel()
                         {
                             Name = "AUDI A6",
-                            Abrv = "A6"
+                            Abrv = "A6",
+                            MakeId = 3
                         }
                     }
                 }
@@ -69,7 +74,7 @@ namespace Project.Service
         {
             get
             {
-                return _Vehicles;
+                return _vehicles;
             }
         }
     }
@@ -80,7 +85,7 @@ namespace Project.Service
         {
             var seedData = new SeedData();
 
-            context.VehicleMake.AddRange(seedData.Vehicles);
+            context.VehicleMakes.AddRange(seedData.Vehicles);
             base.Seed(context);
         }
     }
@@ -91,7 +96,7 @@ namespace Project.Service
         {
             var seedData = new SeedData();
 
-            context.VehicleMake.AddRange(seedData.Vehicles);
+            context.VehicleMakes.AddRange(seedData.Vehicles);
             base.Seed(context);
         }
     }

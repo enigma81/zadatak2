@@ -2,75 +2,177 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using System.Diagnostics.Contracts;
 
 namespace Project.Service
 {
     public class VehicleService
     {
-        public List<VehicleMake> GetVehicleMake()
+        #region Properties
+        public IEnumerable<VehicleModel> VehicleModels
         {
-            using (var db = new VehicleDBContext())
+            get
             {
-                return db.VehicleMake.ToList();
+                using(var db  = new VehicleDBContext())
+                    return db.VehicleModels.ToList();
+            }
+        }
+        public IEnumerable<VehicleMake> VehicleMakes
+        {
+            get
+            {
+                using (var db = new VehicleDBContext())
+                    return db.VehicleMakes.ToList();
+            }
+        }
+        #endregion
+
+        public IEnumerable<VehicleModel> GetVehicleModels(int? makeId, int? page, int pageSize, out int pageCount)
+        {
+            IEnumerable<VehicleModel> models;
+
+            int pageNumber = page ?? 1;
+            
+            if (makeId == null)
+            {
+                // Get all vehicle models
+                models = this.VehicleModels;
+                pageCount = (int)Math.Ceiling((decimal)models.Count() / (decimal)pageSize);
+                return (models.Skip((pageNumber - 1) * pageSize).Take(pageSize));
+
+            }
+            else
+            {
+                models = this.VehicleModels.Where(x => x.MakeId == makeId);     // Get a list of models belonging to a VehicleMake
+                pageCount = (int)Math.Ceiling((decimal)models.Count() / (decimal)pageSize);
+                return (models.Skip((pageNumber - 1) * pageSize).Take(pageSize));
             }
         }
 
-        public List<VehicleModel> GetVehicleModel()
+        public VehicleModel GetModelById(int? id)
         {
-            using (var db = new VehicleDBContext())
+            Contract.Requires(id != null);
+            Contract.Requires(id > 0);
+
+            VehicleModel model;
+
+            try
             {
-                return db.VehicleModel.ToList();
+                model = VehicleModels.SingleOrDefault(x => x.Id == id);
+                return model;
+            }
+            catch (Exception)
+            {
+                // Have to check how to handle exceptions
+                throw new Exception("fatal error");
             }
         }
 
-        public void InsertVehicleMake(VehicleMake vehicle)
-        {
-            VehicleMake toInsert = new VehicleMake();
+        // Insert new vehicle
+        public bool Insert(AVehicle vehicle, out string error)
+        {            
+            Contract.Requires(vehicle != null);
+            Contract.Requires<ArgumentNullException>(String.IsNullOrEmpty(vehicle.Name) == false,"Name is compulsory");
 
             using (var db = new VehicleDBContext())
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<VehicleMake, VehicleMake>());
+                if (vehicle.GetType() == typeof(VehicleMake))
+                {                    
+                    Mapper.Initialize(cfg => cfg.CreateMap<VehicleMake, VehicleMake>());
 
-                if (String.IsNullOrEmpty(vehicle.Name))
-                    throw new Exception("Name required");
+                    VehicleMake toInsert = new VehicleMake();
 
-                Mapper.Map(vehicle, toInsert);
+                    Mapper.Map((VehicleMake)vehicle, toInsert);
 
-                db.VehicleMake.Add(toInsert);
-                db.SaveChanges();
+                    db.VehicleMakes.Add(toInsert);
+                }
+                else if (vehicle.GetType() == typeof(VehicleModel))
+                {   
+                    Mapper.Initialize(cfg => cfg.CreateMap<VehicleModel, VehicleModel>());
+                    VehicleModel toInsert = new VehicleModel();
+
+                    Mapper.Map((VehicleModel)vehicle, toInsert);
+
+                    db.VehicleModels.Add(toInsert);
+                }
+                else
+                {
+                    throw new Exception("error data input");
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                    error = String.Empty;
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    return false;
+                }                
             }
-
         }
 
-        public void UpdateVehicleMake(VehicleMake update)
+        // Update vehicle
+        public bool Update(AVehicle vehicle, out string error)
         {
+            Contract.Requires(vehicle != null);
+            Contract.Requires<ArgumentNullException>(String.IsNullOrEmpty(vehicle.Name) == false, "Name is compulsory");
+
             using (var db = new VehicleDBContext())
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<VehicleMake, VehicleMake>());
-                VehicleMake toUpdate = db.VehicleMake.FirstOrDefault(x => x.Id == update.Id);
+                if (vehicle.GetType() == typeof(VehicleMake))
+                {
+                    VehicleMake toUpdate = new VehicleMake();
+                    Mapper.Initialize(cfg => cfg.CreateMap<VehicleMake, VehicleMake>());
+                    toUpdate = db.VehicleMakes.FirstOrDefault(x => x.Id == vehicle.Id);
 
-                Mapper.Map(update, toUpdate);
-                db.SaveChanges();
+                    Mapper.Map((VehicleMake)vehicle, toUpdate);
+                }
+                else if (vehicle.GetType() == typeof(VehicleModel))
+                {
+                    VehicleModel toUpdate = new VehicleModel();
+                    Mapper.Initialize(cfg => cfg.CreateMap<VehicleModel, VehicleModel>());
+                    toUpdate = db.VehicleModels.FirstOrDefault(x => x.Id == vehicle.Id);
+
+                    Mapper.Map((VehicleModel)vehicle, toUpdate);
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                    error = String.Empty;
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    error = e.Message + " something went wrong";
+                    return false;
+                }
             }
-
         }
-        public void DeleteVehicleMake(VehicleMake delete)
+
+        // Delete vehicle
+        public bool DeleteModel(int id)
         {
+            Contract.Requires(id > 0);
+
             using (var db = new VehicleDBContext())
             {
-                VehicleMake toDelete = db.VehicleMake.FirstOrDefault(x => x.Id == delete.Id);
-                db.VehicleMake.Remove(toDelete);
-                db.SaveChanges();
+                VehicleModel toDelete = db.VehicleModels.SingleOrDefault(x => x.Id == id);
+                if (toDelete != null)
+                {
+                    db.VehicleModels.Remove(toDelete);
+                    db.SaveChanges();
+                    return true;
+                }
+                else
+                    return false;
             }
         }
-
-        public VehicleMake GetById(int Id)
-        {
-            using (var db = new VehicleDBContext())
-            {
-                return db.VehicleMake.FirstOrDefault(x => x.Id == Id);
-            }
-        }
-
-    }// VehicleService
+    }// VehicleService   
+    
 }
+
+

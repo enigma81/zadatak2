@@ -1,0 +1,35 @@
+﻿@model Project.Service.VehicleModel
+
+@{
+    ViewBag.Title = "Model details";
+}
+
+@Html.ActionLink("Edit model", "Edit", new { id = Model.Id })
+<h2>Model details</h2>
+<table>
+    <tr>
+        <td>
+            Id:
+        </td>
+        <td>
+            @Model.Id
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Name:
+        </td>
+        <td>
+            @Model.Name
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Abrv:
+        </td>
+        <td>
+            @Model.Abrv
+        </td>
+    </tr>
+</table>
+@Html.ActionLink("Back", "Index", new { makeId = Model.MakeId, page = ViewBag.page })

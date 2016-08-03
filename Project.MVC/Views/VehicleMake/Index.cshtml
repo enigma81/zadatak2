@@ -1,0 +1,18 @@
+﻿@using Project.Service
+@model IEnumerable<VehicleMake>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+<h2>Vehicle list</h2>
+<div>
+    <ul>
+        @foreach (VehicleMake item in Model)
+        {
+            <li>
+                @Html.ActionLink(item.Name, "Index", "VehicleModel", new { makeId = item.Id }, null)
+            </li>
+        }
+    </ul>
+</div>

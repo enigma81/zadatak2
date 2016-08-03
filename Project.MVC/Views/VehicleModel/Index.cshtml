@@ -1,0 +1,44 @@
+﻿@using Project.Service
+@model IEnumerable<VehicleModel>
+
+@{
+    ViewBag.Title = "VehicleModels";
+}
+
+<h2>VehicleModels</h2>
+<div>
+    <p>@Html.ActionLink("Create new", "Create")</p>
+    <table class="modelTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>@Html.ActionLink("Model", "Index",
+                   new { orderBy = ViewBag.SortName
+                   ,makeId = Request.QueryString["makeId"]
+                   ,page = Request.QueryString["page"]
+                   })</th>
+                <th>Abrv</th>
+                <th>MakeID</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        @foreach (VehicleModel item in Model)
+        {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Abrv</td>
+                    <td>@item.MakeId</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                        @Html.ActionLink("delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>            
+        }
+    </table>
+    @for (var i=1; i <= (int)ViewBag.pageCount; i++)
+    {
+        @Html.ActionLink(i.ToString(),"Index", new { makeId = ViewBag.makeId, page = i})
+    }
+</div>
+@Html.ActionLink("Back", "Index", "VehicleMake")

@@ -4,13 +4,21 @@ namespace Project.Service
 {
     public class VehicleDBContext : DbContext
     {
-        public DbSet<VehicleMake> VehicleMake { get; set; }
-        public DbSet<VehicleModel> VehicleModel { get; set; }
+        public DbSet<VehicleMake> VehicleMakes { get; set; }
+        public DbSet<VehicleModel> VehicleModels { get; set; }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{   
-        //    modelBuilder.Entity<VehicleMake>().ToTable("VehicleMake");
-        //    modelBuilder.Entity<VehicleModel>().ToTable("VehicleModel");
-        //}
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<VehicleModel>().Property(x => x.Name)
+                .HasColumnName("Name")
+                .HasColumnType("VARCHAR")
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<VehicleModel>()
+                .HasRequired(x => x.VehicleMake)
+                .WithMany(x => x.VehicleModels)
+                .HasForeignKey(x => x.MakeId);
+        }
     }
 }
