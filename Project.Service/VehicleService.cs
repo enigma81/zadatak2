@@ -26,7 +26,7 @@ namespace Project.Service
             }
         }
         #endregion
-
+        
         public IEnumerable<VehicleModel> GetVehicleModels(int? makeId, int? page, int pageSize, out int pageCount)
         {
             IEnumerable<VehicleModel> models;
@@ -44,7 +44,7 @@ namespace Project.Service
             else
             {
                 models = this.VehicleModels.Where(x => x.MakeId == makeId);     // Get a list of models belonging to a VehicleMake
-                pageCount = (int)Math.Ceiling((decimal)models.Count() / (decimal)pageSize);
+                pageCount = (int)Math.Ceiling(models.Count() / (decimal)pageSize);
                 return (models.Skip((pageNumber - 1) * pageSize).Take(pageSize));
             }
         }

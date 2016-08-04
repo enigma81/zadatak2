@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Project.Service;
+﻿using System.Web.Mvc;
+using Project.MVC.Models;
 
 namespace Project.MVC.Controllers
 {
     public class VehicleMakeController : Controller
     {
-        private VehicleService service = new VehicleService();
+        private VehicleMake vehicle = new VehicleMake();
+
+
         // GET: VehicleMake
         public ActionResult Index()
         {
-            return View(service.VehicleMakes);
+            return View(vehicle.VehicleMakes);
         }
     }
 }

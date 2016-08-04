@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 using Project.Service;
 using System.Data.Entity;
+using System;
 
 namespace Project.MVC
 {
@@ -18,6 +15,13 @@ namespace Project.MVC
 
             Database.SetInitializer(new VehicleDBContextSeederNotExists());
             Database.SetInitializer(new VehicleDBContextSeederModelChanges());
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            Exception ex = Server.GetLastError();
+            Server.ClearError();
+            Response.Redirect("/Error/ErrorMessage");
         }
     }
 }

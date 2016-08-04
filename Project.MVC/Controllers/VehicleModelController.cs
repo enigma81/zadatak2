@@ -18,9 +18,9 @@ namespace Project.MVC.Controllers
             int pageCount;
 
             ViewBag.makeId = makeId ?? null;
-            ViewBag.page = (int)(page ?? 1);
+            ViewBag.page = page ?? 1;
             ViewBag.SortName = string.IsNullOrEmpty(orderBy) ? "Name" : "";
-
+            
             IEnumerable<VehicleModel> models = service.GetVehicleModels(makeId, page, pageSize, out pageCount);
             ViewBag.pageCount = pageCount;
 
