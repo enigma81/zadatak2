@@ -19,9 +19,9 @@ namespace Project.MVC
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            Exception ex = Server.GetLastError();
-            Server.ClearError();
-            Response.Redirect("/Error/ErrorMessage");
+            //Exception ex = Server.GetLastError();
+            //Server.ClearError();
+            //Response.Redirect("/Error/ErrorMessage");
         }
     }
 }

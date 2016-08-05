@@ -9,5 +9,10 @@ namespace Project.MVC.Controllers
         {
             return View();
         }
+
+        public ActionResult PageNotFound()
+        {
+            return View();
+        }
     }
 }

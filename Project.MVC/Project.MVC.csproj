@@ -158,7 +158,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\VehicleMake.cs" />
+    <Compile Include="Models\VehicleMakeRepo.cs" />
     <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -175,6 +175,7 @@
     <Content Include="Views\VehicleModel\Create.cshtml" />
     <Content Include="Views\VehicleModel\Edit.cshtml" />
     <Content Include="Views\Error\ErrorMessage.cshtml" />
+    <Content Include="Views\Error\PageNotFound.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

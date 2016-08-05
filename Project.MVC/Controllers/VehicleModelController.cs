@@ -16,8 +16,9 @@ namespace Project.MVC.Controllers
         public ActionResult Index(int? makeId, int? page, string orderBy)
         {
             int pageCount;
-
+            
             ViewBag.makeId = makeId ?? null;
+
             ViewBag.page = page ?? 1;
             ViewBag.SortName = string.IsNullOrEmpty(orderBy) ? "Name" : "";
             

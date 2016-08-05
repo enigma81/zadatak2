@@ -5,13 +5,12 @@ namespace Project.MVC.Controllers
 {
     public class VehicleMakeController : Controller
     {
-        private VehicleMake vehicle = new VehicleMake();
-
-
+        private VehicleMakeRepo vehicle = new VehicleMakeRepo();
+        
         // GET: VehicleMake
         public ActionResult Index()
         {
-            return View(vehicle.VehicleMakes);
+            return View(vehicle.GetAll());
         }
     }
 }

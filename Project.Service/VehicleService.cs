@@ -3,9 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using System.Diagnostics.Contracts;
+using System.Data.Entity;
+using System.Linq.Expressions;
 
 namespace Project.Service
 {
+    /**
+     *  Generic solution
+     * 
+     * */
+
+    public class VehicleService1<TEntity> where TEntity : class
+    {
+        internal DbSet<TEntity> dbSet;
+        internal VehicleDBContext context;
+
+        public VehicleService1(VehicleDBContext context)
+        {
+            this.context = context;
+            this.dbSet = context.Set<TEntity>();
+        }
+                
+        public virtual IQueryable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "")
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query);
+            }
+
+            return query;
+        }
+
+    }
+
+
+    /**
+     *  Homosapiens solution
+     * 
+     * */
     public class VehicleService
     {
         #region Properties
@@ -26,7 +71,7 @@ namespace Project.Service
             }
         }
         #endregion
-        
+                
         public IEnumerable<VehicleModel> GetVehicleModels(int? makeId, int? page, int pageSize, out int pageCount)
         {
             IEnumerable<VehicleModel> models;
