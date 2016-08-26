@@ -8,6 +8,32 @@ using System.Linq.Expressions;
 
 namespace Project.Service
 {
+
+
+    public class VehicleService2<TEntity> : IVehicleService 
+        where TEntity : class
+    {
+        internal DbSet<TEntity> dbSet;
+        internal VehicleDBContext context;
+
+        public VehicleService2(VehicleDBContext context)
+        {
+            this.context = context;
+            dbSet = context.Set<TEntity>();
+        }
+
+        public IQueryable<VehicleMake> GetVehicleMakes()
+        {
+            IQueryable<VehicleMake> query = (IQueryable<VehicleMake>)dbSet;
+
+            return query;
+        }
+
+        public IQueryable<VehicleModel> GetVehicleModels()
+        {
+            throw new NotImplementedException();
+        }
+    }
     /**
      *  Generic solution
      * 
@@ -34,6 +60,12 @@ namespace Project.Service
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
             }
 
             if (orderBy != null)

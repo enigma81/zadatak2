@@ -1,7 +1,7 @@
-﻿using System.Data.Entity;
-
-namespace Project.Service
+﻿namespace Project.Service
 {
+    using System.Data.Entity;
+
     public class VehicleDBContext : DbContext
     {
         public DbSet<VehicleMake> VehicleMakes { get; set; }
